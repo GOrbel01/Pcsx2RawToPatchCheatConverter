@@ -1,8 +1,7 @@
 package com.geo.conv;
 
-import com.geo.conv.functions.StringFunctions;
 import com.geo.conv.io.PatchFileWriter;
-import com.geo.conv.io.RawFileReader;
+import com.geo.conv.user.FileChooser;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -11,9 +10,9 @@ import java.io.IOException;
 
 public class FileConverter {
     public void convertFile() throws IOException {
-        RawFileReader fr = new RawFileReader();
-        File f = fr.readInputFile();
-        PatchFileWriter writer = new PatchFileWriter();
+        FileChooser fileChooser = new FileChooser();
+        File f = fileChooser.chooseFile();
+        PatchFileWriter writer = new PatchFileWriter(fileChooser.getMode());
         FileReader reader = new FileReader(f);
         BufferedReader br = new BufferedReader(reader);
         while (br.ready()) {

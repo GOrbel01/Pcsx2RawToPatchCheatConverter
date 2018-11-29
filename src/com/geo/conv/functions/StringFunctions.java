@@ -1,8 +1,9 @@
 package com.geo.conv.functions;
 
 public class StringFunctions {
-    public static boolean containsOnlyNumbersAndOneSpace(String line){
-        if (line.length() == 0) {
+    //containsOnlyNumbersAndOneSpace
+    public static boolean isRawCheatLine(String line){
+        if (isEmptyLine(line)) {
             return false;
         }
         String[] res = line.split(" ");
@@ -31,5 +32,22 @@ public class StringFunctions {
             return false;
         }
         return true;
+    }
+
+    private static boolean isEmptyLine(String line) {
+        if (line.length() == 0) {
+            return true;
+        }
+        return false;
+    }
+
+    public static boolean isFormattedPatchLine(String line) {
+        if (isEmptyLine(line)) {
+            return false;
+        } else if (line.length() < 16) {
+            return false;
+        } else {
+            return line.substring(0, 7).equals("patch=1") || line.substring(0, 9).equals("//patch=1");
+        }
     }
 }
