@@ -19,6 +19,12 @@ public class FileConverter {
             String line = br.readLine();
             writer.writeToFile(line);
         }
+        swapTempAndClean(writer, fileChooser);
     }
 
+    private void swapTempAndClean(PatchFileWriter writer, FileChooser chooser) {
+        new File(chooser.getFileName()).delete();
+        File tempFile = new File(chooser.getFileName() + "_temp");
+        tempFile.renameTo(new File(chooser.getFileName()));
+    }
 }

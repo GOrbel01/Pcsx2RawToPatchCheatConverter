@@ -11,6 +11,7 @@ import java.util.Scanner;
 public class FileChooser {
     private File[] files;
     private Mode mode;
+    private String fileName;
 
     public File chooseFile() {
         File f = setupDirectory();
@@ -18,7 +19,9 @@ public class FileChooser {
         setupFiles(mode, f);
         validateFiles(files);
         printFiles(files);
-        return files[getUserChoice(files)];
+        File res = files[getUserChoice(files)];
+        this.fileName = res.getName();
+        return res;
     }
 
     private File setupDirectory() {
@@ -58,6 +61,10 @@ public class FileChooser {
 
     public Mode getMode() {
         return mode;
+    }
+
+    public String getFileName() {
+        return fileName;
     }
 
     private void printFiles(File[] files) {
