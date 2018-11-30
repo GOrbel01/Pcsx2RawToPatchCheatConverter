@@ -64,6 +64,8 @@ public class PatchFileWriter {
                 //Check isnt already commented
                 if (!toWrite.substring(0, 2).equals("//")) {
                     fileWriter.write("//" + toWrite);
+                } else {
+                    fileWriter.write(toWrite);
                 }
             } else {
                 fileWriter.write(toWrite);
