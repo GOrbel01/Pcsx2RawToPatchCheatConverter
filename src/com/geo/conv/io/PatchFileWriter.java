@@ -8,25 +8,19 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class PatchFileWriter {
-    private File output;
     private File tempOutput;
     private FileWriter fileWriter;
     private Mode mode;
     private String fileName;
 
-    public PatchFileWriter(Mode mode) {
-        this.output = new File(AppDir.getFullAppDir() + File.separator + fileName);
+    public PatchFileWriter(Mode mode, String fileName) {
+        this.fileName = fileName;
         createFile();
         this.mode = mode;
     }
 
     public void createFile() {
         this.tempOutput = new File(AppDir.getFullAppDir() + File.separator + fileName + "_temp");
-        if (tempOutput.exists()) {
-            tempOutput.delete();
-        } else {
-            tempOutput.mkdir();
-        }
     }
 
     public void writeToFile(String toWrite) throws IOException {
@@ -88,10 +82,6 @@ public class PatchFileWriter {
         return tempOutput;
     }
 
-    public File getOutput() {
-        return output;
-    }
-
     private String morphLineToPcsx2CheatFormat(String line) {
         String[] text = line.split(" ");
         StringBuilder sb = new StringBuilder();
@@ -105,5 +95,9 @@ public class PatchFileWriter {
 
         }
         return sb.toString();
+    }
+
+    public void closeWriter() throws IOException {
+        this.fileWriter.close();
     }
 }
