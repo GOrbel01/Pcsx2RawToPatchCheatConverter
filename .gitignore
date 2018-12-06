@@ -1,3 +1,5 @@
 *.iml
+lib
 out
 .idea
+target
