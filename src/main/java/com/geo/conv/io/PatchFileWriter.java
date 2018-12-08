@@ -9,7 +9,6 @@ import java.io.IOException;
 
 public class PatchFileWriter {
     private File tempOutput;
-    private FileWriter fileWriter;
     private Mode mode;
     private String fileName;
 
@@ -23,63 +22,62 @@ public class PatchFileWriter {
         this.tempOutput = new File(AppDir.getFullAppDir() + File.separator + fileName + "_temp");
     }
 
-    public void writeToFile(String toWrite) throws IOException {
-        if (fileWriter == null) {
-            fileWriter = new FileWriter(tempOutput);
-        }
+    public String morphInputData(String toWrite) throws IOException {
+        String result;
         if (mode == Mode.CONVERT) {
-            writeConversionMode(toWrite, fileWriter);
+            result = writeConversionMode(toWrite);
         } else {
-            writeCommentMode(toWrite, fileWriter);
+            result = writeCommentMode(toWrite);
         }
-        fileWriter.write(System.lineSeparator());
-        fileWriter.flush();
+        return result;
     }
 
-    private void writeConversionMode(String toWrite, FileWriter fileWriter) throws IOException {
+    private String writeConversionMode(String toWrite) throws IOException {
+        StringBuilder sb = new StringBuilder();
         if (StringFunctions.isRawCheatLine(toWrite)) {
-            fileWriter.write(morphLineToPcsx2CheatFormat(toWrite));
+            sb.append(morphLineToPcsx2CheatFormat(toWrite));
         } else {
             if (toWrite.equals("")) {
-                fileWriter.write(toWrite);
+                sb.append(toWrite);
             } else {
                 if (!toWrite.substring(0, 2).equals("//")) {
-                    fileWriter.write("//" + toWrite);
+                    sb.append("//");
+                    sb.append(toWrite);
                 } else {
-                    fileWriter.write(toWrite);
+                    sb.append(toWrite);
                 }
             }
         }
+        return sb.toString();
     }
 
-    private void writeCommentMode(String toWrite, FileWriter fileWriter) throws IOException {
+    private String writeCommentMode(String toWrite) throws IOException {
+        StringBuilder sb = new StringBuilder();
         if (mode == Mode.COMMENT) {
             if (StringFunctions.isFormattedPatchLine(toWrite)) {
                 //Check isnt already commented
                 if (!toWrite.substring(0, 2).equals("//")) {
-                    fileWriter.write("//" + toWrite);
+                    sb.append("//");
+                    sb.append(toWrite);
                 } else {
-                    fileWriter.write(toWrite);
+                    sb.append(toWrite);
                 }
             } else {
-                fileWriter.write(toWrite);
+                sb.append(toWrite);
             }
         } else {
             if (StringFunctions.isFormattedPatchLine(toWrite)) {
                 //Check is already commented
                 if (toWrite.substring(0, 2).equals("//")) {
-                    fileWriter.write(toWrite.substring(2, toWrite.length()));
+                    sb.append(toWrite.substring(2, toWrite.length()));
                 } else {
-                    fileWriter.write(toWrite);
+                    sb.append(toWrite);
                 }
             } else {
-                fileWriter.write(toWrite);
+                sb.append(toWrite);
             }
         }
-    }
-
-    public File getTempOutput() {
-        return tempOutput;
+        return sb.toString();
     }
 
     private String morphLineToPcsx2CheatFormat(String line) {
@@ -95,9 +93,5 @@ public class PatchFileWriter {
 
         }
         return sb.toString();
-    }
-
-    public void closeWriter() throws IOException {
-        this.fileWriter.close();
     }
 }
